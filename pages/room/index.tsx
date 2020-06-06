@@ -1,20 +1,20 @@
 import React, { FunctionComponent, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import { db } from "../../lib/firebase";
+import useRoom from "../../hooks/useRoom";
+import useUser from "../../hooks/useUser";
 
 const EmptyRoomPage: FunctionComponent = () => {
+  const { createUser, userObserver } = useUser();
+  const { createNewRoom } = useRoom();
   const router = useRouter();
 
-  const createRoom = async () => {
-    const room = await db.collection("rooms").add({
-      host: "host name",
-    });
-    router.push(`/room/${room.id}`);
-  };
-
   useEffect(() => {
-    createRoom();
+    createUser(true);
+    userObserver(async (user) => {
+      const room = await createNewRoom(user.uid);
+      router.push(`/room/${room.id}`);
+    });
   }, []);
 
   return <p>creating room...</p>;

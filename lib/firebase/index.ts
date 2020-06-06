@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
+import "firebase/auth";
 
 const firebaseConfig = {
   messagingSenderId: process.env.FIREBASE_MESSAGING_ID,
@@ -16,6 +17,8 @@ const firebaseInstance = !firebase.apps.length
   ? firebase.initializeApp(firebaseConfig)
   : firebase.app();
 
+const FieldValue = firebase.firestore.FieldValue;
 const db = firebaseInstance.firestore();
+const auth = firebaseInstance.auth();
 
-export { db };
+export { auth, db, FieldValue };
