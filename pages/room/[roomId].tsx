@@ -1,11 +1,9 @@
 import React, { FunctionComponent, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import { styled } from "../../providers/theme";
+import Button from "../../components/Button";
 import { auth } from "../../lib/firebase";
 import useRoom from "../../hooks/useRoom";
-
-const P = styled.p``;
 
 const RoomPage: FunctionComponent = () => {
   const router = useRouter();
@@ -16,7 +14,7 @@ const RoomPage: FunctionComponent = () => {
     if (roomId) observeRoom(roomId);
   }, [roomId]);
 
-  if (!currentRoom) return <P>loading room...</P>;
+  if (!currentRoom) return <p>loading room...</p>;
 
   const increment = () => {
     updateCounter(roomId, 1);
@@ -31,8 +29,10 @@ const RoomPage: FunctionComponent = () => {
       <pre>{JSON.stringify(currentRoom, null, 2)}</pre>
       <p>isHost: {String(currentRoom.host === auth.currentUser?.uid)}</p>
       <p>displayName: {auth.currentUser?.displayName}</p>
-      <button onClick={decrement}>decrement</button>
-      <button onClick={increment}>increment</button>
+      <Button secondary onClick={decrement}>
+        decrement
+      </Button>
+      <Button onClick={increment}>increment</Button>
     </>
   );
 };

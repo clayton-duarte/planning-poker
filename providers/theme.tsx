@@ -5,11 +5,27 @@ import baseStyled, {
   ThemeProvider,
 } from "styled-components";
 
+enum EpisodeColors {
+  BG = "#000000",
+  EP_ONE = "#ffffff",
+  EP_TWO = "#00fdfd",
+  EP_THREE = "#646464",
+  EP_FOUR = "#f4892c",
+  EP_FIVE = "#a436f4",
+  EP_SIX = "#28d927",
+  EP_SEVEN = "#ffea1b",
+  EP_EIGHT = "#fe261f",
+  EP_NINE = "#4467cc",
+}
+
 enum Palette {
-  PRIMARY = "#f6c90e",
-  SECONDARY = "#f8f8f8",
-  TEXT = "#f6c90e",
-  BG = "#363636",
+  PRIMARY = EpisodeColors.EP_SEVEN,
+  SECONDARY = EpisodeColors.EP_TWO,
+  DISABLED = EpisodeColors.EP_THREE,
+  SUCCESS = EpisodeColors.EP_SIX,
+  ERROR = EpisodeColors.EP_EIGHT,
+  TEXT = EpisodeColors.EP_ONE,
+  BG = EpisodeColors.BG,
 }
 
 enum Font {
@@ -24,12 +40,13 @@ enum Shape {
 }
 
 const theme = {
+  colors: EpisodeColors,
   palette: Palette,
   shape: Shape,
   font: Font,
 };
 
-type Theme = typeof theme;
+export type Theme = typeof theme;
 
 const GlobalStyle = createGlobalStyle<{ theme: Theme }>`
 html, 
