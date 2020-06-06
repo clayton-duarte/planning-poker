@@ -12,13 +12,10 @@ const useUser = () => {
     const {
       data: { count },
     } = await axiosInstance.get(`/`);
-
     const randomId = Math.ceil(Math.random() * count);
-
     const {
       data: { name },
     } = await axiosInstance.get(`/${randomId}`);
-    console.log("createDisplayName", name);
 
     return name;
   };

@@ -1,8 +1,8 @@
 import { User } from "firebase";
-
-import { auth, db, FieldValue } from "../lib/firebase";
 import Axios from "axios";
 
+import { auth, db, FieldValue } from "../lib/firebase";
+import { useRoomContext } from "../providers/room";
 import { Room } from "../lib/types";
 import useUser from "./useUser";
 
@@ -11,19 +11,17 @@ const axiosInstance = Axios.create({
 });
 
 const useRoom = () => {
+  const { currentRoom, setRoom } = useRoomContext();
   const { createUser } = useUser();
 
   const createDisplayName = async () => {
     const {
       data: { count },
     } = await axiosInstance.get(`/`);
-
     const randomId = Math.ceil(Math.random() * count);
-
     const {
       data: { name },
     } = await axiosInstance.get(`/${randomId}`);
-    console.log("createDisplayName", name);
 
     return name;
   };
@@ -31,7 +29,6 @@ const useRoom = () => {
   const addParticipant = async (roomId: string) => {
     if (!auth.currentUser) await createUser();
     if (auth.currentUser) {
-      console.log("addParticipant", auth.currentUser.uid);
       db.collection("rooms")
         .doc(roomId)
         .update({
@@ -52,20 +49,24 @@ const useRoom = () => {
     return room;
   };
 
-  const observeRoom = async (
-    roomId: string,
-    cb: (data: Room) => void,
-    err: (error: Error) => void
-  ) => {
+  const observeRoom = async (roomId: string) => {
     const doc = db.collection("rooms").doc(roomId);
-    if (!(await doc.get()).exists) return err(new Error("Room not found"));
+
+    if (!(await doc.get()).exists) {
+      throw new Error("Room not found");
+    }
+
     await addParticipant(roomId);
 
     doc.onSnapshot(
       (roomSnapshot) => {
-        if (roomSnapshot.exists) return cb(roomSnapshot.data() as Room);
+        if (roomSnapshot.exists) {
+          return setRoom(roomSnapshot.data() as Room);
+        }
       },
-      (err) => console.log(err)
+      (error) => {
+        throw new Error(JSON.stringify(error));
+      }
     );
   };
 
@@ -77,7 +78,7 @@ const useRoom = () => {
       });
   };
 
-  return { observeRoom, updateCounter, createNewRoom };
+  return { currentRoom, observeRoom, updateCounter, createNewRoom };
 };
 
 export default useRoom;

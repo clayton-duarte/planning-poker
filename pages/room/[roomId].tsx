@@ -1,27 +1,22 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent, useEffect } from "react";
 import { useRouter } from "next/router";
 
 import { styled } from "../../providers/theme";
 import { auth } from "../../lib/firebase";
 import useRoom from "../../hooks/useRoom";
-import { Room } from "../../lib/types";
 
 const P = styled.p``;
 
 const RoomPage: FunctionComponent = () => {
   const router = useRouter();
   const roomId = router.query.roomId as string;
-  const { observeRoom, updateCounter } = useRoom();
-  const [room, setRoom] = useState<Room>();
+  const { currentRoom, observeRoom, updateCounter } = useRoom();
 
   useEffect(() => {
-    if (roomId)
-      observeRoom(roomId, setRoom, () => {
-        router.push("/");
-      });
+    if (roomId) observeRoom(roomId);
   }, [roomId]);
 
-  if (!room) return <P>loading room...</P>;
+  if (!currentRoom) return <P>loading room...</P>;
 
   const increment = () => {
     updateCounter(roomId, 1);
@@ -33,9 +28,8 @@ const RoomPage: FunctionComponent = () => {
 
   return (
     <>
-      <pre>{JSON.stringify(room, null, 2)}</pre>
-      <p>Room: {room.displayName}</p>
-      <p>isHost: {String(room.host === auth.currentUser?.uid)}</p>
+      <pre>{JSON.stringify(currentRoom, null, 2)}</pre>
+      <p>isHost: {String(currentRoom.host === auth.currentUser?.uid)}</p>
       <p>displayName: {auth.currentUser?.displayName}</p>
       <button onClick={decrement}>decrement</button>
       <button onClick={increment}>increment</button>
