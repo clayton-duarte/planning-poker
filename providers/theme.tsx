@@ -6,10 +6,10 @@ import baseStyled, {
 } from "styled-components";
 
 enum Palette {
-  PRIMARY = "tomato",
-  SECONDARY = "dimgray",
-  TEXT = "black",
-  BG = "whitesmoke",
+  PRIMARY = "#f6c90e",
+  SECONDARY = "#f8f8f8",
+  TEXT = "#f6c90e",
+  BG = "#363636",
 }
 
 enum Font {
@@ -40,6 +40,24 @@ body {
   color: ${(props) => props.theme.palette.TEXT};
   padding: 0;
   margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+  font-weight: unset;
+}
+
+@font-face {
+  font-family: AnakinMono;
+  src: url(/fonts/AnakinMono.ttf);
+}
+@font-face {
+  font-family: DistantGalaxy;
+  src: url(/fonts/DistantGalaxy.ttf);
+}
+@font-face {
+  font-family: Eposode1;
+  src: url(/fonts/Eposode1.ttf);
 }
 `;
 
